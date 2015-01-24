@@ -18,10 +18,10 @@ public class TimeServlet extends HttpServlet {
     
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("text/html");
+       resp.setContentType("text/html");
         PrintWriter writer = resp.getWriter();
         writer.println("<html><head><title>Time</title></head><body>");
-        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss %z");
+        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss UTC-xx");
         Calendar cal = Calendar.getInstance();
         writer.println(dateFormat.format(cal.getTime()));
         writer.println("</body></html>");

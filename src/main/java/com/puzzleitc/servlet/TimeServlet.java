@@ -21,7 +21,7 @@ public class TimeServlet extends HttpServlet {
        resp.setContentType("text/html");
         PrintWriter writer = resp.getWriter();
         writer.println("<html><head><title>Time</title></head><body>");
-        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss, zzzz, 'GMT'XXX");
+        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss 'UTC'XXX");
         Calendar cal = Calendar.getInstance();
         writer.println(dateFormat.format(cal.getTime()));
         writer.println("</body></html>");

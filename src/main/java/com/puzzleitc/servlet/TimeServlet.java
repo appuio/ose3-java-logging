@@ -29,7 +29,8 @@ public class TimeServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        logger.info(map("url", req.getRequestURL().toString()).getFormattedMessage(new String[]{"JSON"}));
+//        logger.info(map("url", req.getRequestURL().toString()).getFormattedMessage(new String[]{"JSON"}));
+        System.out.println("{\"timeMillis\":1463644362907,\"thread\":\"default task-4\",\"level\":\"INFO\",\"loggerName\":\"com.puzzleitc.servlet.TimeServlet\",\"message\":{\"url\":\"http://ose3-java-logging-dtschan.ose3-lab.puzzle.ch/\"},\"endOfBatch\":false,\"loggerFqcn\":\"org.apache.logging.log4j.spi.AbstractLogger\",\"contextMap\":[],\"source\":{\"class\":\"com.puzzleitc.servlet.TimeServlet\",\"method\":\"doGet\",\"file\":\"TimeServlet.java\",\"line\":32}}");
         resp.setContentType("text/html");
         PrintWriter writer = resp.getWriter();
         writer.println("<html><head><title>Time</title></head><body>");

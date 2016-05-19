@@ -1,6 +1,7 @@
 <?xml version="1.0" ?>
 
 <server xmlns="urn:jboss:domain:4.0">
+
     <extensions>
         <extension module="org.jboss.as.clustering.infinispan"/>
         <extension module="org.jboss.as.connector"/>
@@ -29,6 +30,8 @@
         <extension module="org.wildfly.extension.security.manager"/>
         <extension module="org.wildfly.extension.undertow"/>
     </extensions>
+
+
     <management>
         <security-realms>
             <security-realm name="ManagementRealm">
@@ -78,12 +81,18 @@
             </role-mapping>
         </access-control>
     </management>
+
     <profile>
         <subsystem xmlns="urn:jboss:domain:logging:3.0">
             <console-handler name="CONSOLE">
                 <level name="INFO"/>
                 <formatter>
                     <named-formatter name="COLOR-PATTERN"/>
+                </formatter>
+            </console-handler>
+            <console-handler name="JUST-PRINT">
+                <formatter>
+                    <pattern-formatter pattern="%s%E%n"/>
                 </formatter>
             </console-handler>
             <periodic-rotating-file-handler name="FILE" autoflush="true">
@@ -102,6 +111,16 @@
             </logger>
             <logger category="sun.rmi">
                 <level name="WARN"/>
+            </logger>
+            <logger category="stderr" use-parent-handlers="false">
+                <handlers>
+                    <handler name="JUST-PRINT"/>
+                </handlers>
+            </logger>
+            <logger category="stdout" use-parent-handlers="false">
+                <handlers>
+                    <handler name="JUST-PRINT"/>
+                </handlers>
             </logger>
             <root-logger>
                 <level name="INFO"/>
@@ -143,25 +162,21 @@
                     <connection-url>jdbc:mysql://${env.OPENSHIFT_MYSQL_DB_HOST}:${env.OPENSHIFT_MYSQL_DB_PORT}/${env.OPENSHIFT_MYSQL_DB_NAME}</connection-url>
                     <driver>mysql</driver>
                     <security>
-                      <user-name>${env.OPENSHIFT_MYSQL_DB_USERNAME}</user-name>
-                      <password>${env.OPENSHIFT_MYSQL_DB_PASSWORD}</password>
+                        <user-name>${env.OPENSHIFT_MYSQL_DB_USERNAME}</user-name>
+                        <password>${env.OPENSHIFT_MYSQL_DB_PASSWORD}</password>
                     </security>
                     <validation>
                         <check-valid-connection-sql>SELECT 1</check-valid-connection-sql>
                         <background-validation>true</background-validation>
                         <background-validation-millis>60000</background-validation-millis>
                         <!--<validate-on-match>true</validate-on-match>-->
-                    </validation>
+                    </validation>          
                     <pool>
                         <flush-strategy>IdleConnections</flush-strategy>
                     </pool>
-                </datasource>
-                <datasource jndi-name="java:jboss/datasources/${env.OPENSHIFT_POSTGRESQL_DATASOURCE}" enabled="${postgresql.enabled}" use-java-context="true" pool-name="${env.OPENSHIFT_POSTGRESQL_DATASOURCE}" use-ccm="true">
-                    <connection-url>jdbc:postgresql://${env.OPENSHIFT_POSTGRESQL_DB_HOST}:${env.OPENSHIFT_POSTGRESQL_DB_PORT}/${env.OPENSHIFT_POSTGRESQL_DB_NAME}</connection-url>
-                    <driver>postgresql</driver>
                     <security>
-                      <user-name>${env.OPENSHIFT_POSTGRESQL_DB_USERNAME}</user-name>
-                      <password>${env.OPENSHIFT_POSTGRESQL_DB_PASSWORD}</password>
+                        <user-name>${env.OPENSHIFT_POSTGRESQL_DB_USERNAME}</user-name>
+                        <password>${env.OPENSHIFT_POSTGRESQL_DB_PASSWORD}</password>
                     </security>
                     <validation>
                         <check-valid-connection-sql>SELECT 1</check-valid-connection-sql>
@@ -177,7 +192,7 @@
                     <driver name="h2" module="com.h2database.h2">
                         <xa-datasource-class>org.h2.jdbcx.JdbcDataSource</xa-datasource-class>
                     </driver>
-					<driver name="mysql" module="com.mysql.jdbc">
+                    <driver name="mysql" module="com.mysql.jdbc">
                         <xa-datasource-class>com.mysql.jdbc.jdbc2.optional.MysqlXADataSource</xa-datasource-class>
                     </driver>
                     <driver name="postgresql" module="org.postgresql.jdbc">
@@ -212,7 +227,7 @@
                 <stateful default-access-timeout="5000" cache-ref="simple" passivation-disabled-cache-ref="simple"/>
                 <stateless>
                     <bean-instance-pool-ref pool-name="slsb-strict-max-pool"/>
-                </stateless>
+                </stateless>          
                 <singleton default-access-timeout="5000"/>
             </session-bean>
             <pools>
@@ -425,6 +440,7 @@
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:weld:3.0"/>
     </profile>
+
     <interfaces>
         <interface name="management">
             <inet-address value="${jboss.bind.address.management:127.0.0.1}"/>
@@ -433,6 +449,7 @@
             <inet-address value="${jboss.bind.address:127.0.0.1}"/>
         </interface>
     </interfaces>
+
     <socket-binding-group name="standard-sockets" default-interface="public" port-offset="${jboss.socket.binding.port-offset:0}">
         <socket-binding name="management-http" interface="management" port="${jboss.management.http.port:9990}"/>
         <socket-binding name="management-https" interface="management" port="${jboss.management.https.port:9993}"/>

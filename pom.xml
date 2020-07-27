@@ -101,7 +101,7 @@ jboss-eap-*-maven-repository/org/jboss/spec/jboss-javaee-6.0
 				<plugins>
 					<plugin>
 						<artifactId>maven-war-plugin</artifactId>
-						<version>3.3.0</version>
+						<version>3.3.1</version>
 						<configuration>
 							<outputDirectory>deployments</outputDirectory>
 							<warName>ROOT</warName>
